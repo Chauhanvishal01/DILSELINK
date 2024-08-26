@@ -3,14 +3,14 @@ import dotenv from "dotenv";
 import authRoutes from "./routes/auth.routes.js";
 import dbConnection from "./database/db.connection.js";
 
-
+dotenv.config();
 
 const app = express();
 
-dotenv.config();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+//routes
 app.use("/api/v1/auth", authRoutes);
-
-console.log(process.env.PORT);
 
 dbConnection();
 
