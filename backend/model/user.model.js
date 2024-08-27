@@ -22,7 +22,6 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
       validate: [validator.isEmail, "Please provide valid email"],
-
     },
     followers: [
       {
@@ -54,6 +53,13 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    likedPosts: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Post",
+        default: [],
+      },
+    ],
   },
   {
     timestamps: true,
