@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import dbConnection from "./database/db.connection.js";
 import authRoutes from "./routes/auth.routes.js";
 import usersRoutes from "./routes/users.routes.js";
+import postRoutes from "./routes/post.routes.js";
 import { v2 as cloudinary } from "cloudinary";
 
 dotenv.config();
@@ -25,6 +26,7 @@ app.use(cookieParser());
 //routes
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", usersRoutes);
+app.use("/api/v1/posts", postRoutes);
 
 dbConnection();
 
