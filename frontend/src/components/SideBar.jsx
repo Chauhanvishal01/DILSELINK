@@ -4,10 +4,11 @@ import { FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { BiLogOut } from "react-icons/bi";
 import Logo from "./Logo";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
 const Sidebar = () => {
+  const { data } = useQuery({ queryKey: ["authUser"] });
   const queryClient = useQueryClient();
   const { mutate: logout } = useMutation({
     mutationFn: async () => {
@@ -27,12 +28,6 @@ const Sidebar = () => {
       }
     },
   });
-
-  const data = {
-    fullName: "John Doe",
-    username: "johndoe",
-    profileImg: "/man1.jpg",
-  };
 
   return (
     <div className="md:flex-[2_2_0] w-18 max-w-52">
@@ -77,7 +72,7 @@ const Sidebar = () => {
           >
             <div className="avatar hidden md:inline-flex">
               <div className="w-8 rounded-full">
-                <img src={data?.profileImg || "/avatar-placeholder.png"} />
+                <img src={data?.profileImg || "/avatar.png"} />
               </div>
             </div>
             <div className="flex justify-between flex-1">
