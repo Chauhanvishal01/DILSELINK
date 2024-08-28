@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { MdOutlineMail } from "react-icons/md";
 import { MdPassword } from "react-icons/md";
 import Logo from "../../components/Logo";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
 const LoginPage = () => {
@@ -12,11 +12,10 @@ const LoginPage = () => {
     username: "",
     password: "",
   });
-  const {
-    mutate: login,
-    isPending,
-    
-  } = useMutation({
+
+  const queryClient = useQueryClient();
+
+  const { mutate: login, isPending } = useMutation({
     mutationFn: async ({ username, password }) => {
       try {
         const res = await fetch("/api/v1/auth/login", {
@@ -31,6 +30,7 @@ const LoginPage = () => {
         if (!res.ok) {
           throw new Error(data.error || "Login Failed. Try again!");
         }
+        queryClient.invalidateQueries({ queryKey: ["authUser"] });
         toast.success("Login successfully");
         return data;
       } catch (error) {

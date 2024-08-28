@@ -4,10 +4,11 @@ import { FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { BiLogOut } from "react-icons/bi";
 import Logo from "./Logo";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
 const Sidebar = () => {
+  const queryClient = useQueryClient();
   const { mutate: logout } = useMutation({
     mutationFn: async () => {
       try {
@@ -18,6 +19,8 @@ const Sidebar = () => {
         if (!res.ok) {
           throw new Error(data.error || "Something went wrong");
         }
+
+        queryClient.invalidateQueries({ queryKey: ["authUser"] });
         toast.success(data.message);
       } catch (error) {
         toast.error(error.message);
