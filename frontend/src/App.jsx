@@ -7,6 +7,8 @@ import Sidebar from "./components/SideBar";
 import RightPanel from "./components/RightPanel";
 import NotificationPage from "./pages/notification/NotificationPage";
 import ProfilePage from "./pages/profile/ProfilePage";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 const App = () => {
   return (
     <>
@@ -20,6 +22,7 @@ const App = () => {
           <Route path="/profile/:username" element={<ProfilePage />} />
         </Routes>
         <RightPanel />
+        <ToastContainer theme="dark" position="bottom-right" />
       </div>
     </>
   );

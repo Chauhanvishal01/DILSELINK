@@ -4,23 +4,48 @@ import { Link } from "react-router-dom";
 import { MdOutlineMail } from "react-icons/md";
 import { MdPassword } from "react-icons/md";
 import Logo from "../../components/Logo";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
+  const {
+    mutate: login,
+    isPending,
+    
+  } = useMutation({
+    mutationFn: async ({ username, password }) => {
+      try {
+        const res = await fetch("/api/v1/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ username, password }),
+        });
 
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error || "Login Failed. Try again!");
+        }
+        toast.success("Login successfully");
+        return data;
+      } catch (error) {
+        toast.error(error.message);
+      }
+    },
+  });
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
+    login(formData);
   };
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
-  const isError = false;
 
   return (
     <div className="max-w-screen-xl mx-auto flex h-screen px-10">
@@ -58,9 +83,8 @@ const LoginPage = () => {
             />
           </label>
           <button className="btn rounded-full btn-primary text-white">
-            Login
+            {isPending ? "Loading..." : "Login"}
           </button>
-          {isError && <p className="text-red-500">Something went wrong</p>}
         </form>
         <div className="flex flex-col gap-2 mt-4">
           <p className="text-white text-lg">{"Don't"} have an account?</p>
