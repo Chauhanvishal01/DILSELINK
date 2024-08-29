@@ -8,10 +8,17 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import Spinner from "./subComponents/Spinner";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { formatPostDate } from "../utils/timeFunctions";
 const Post = ({ post }) => {
   const [comment, setComment] = useState("");
   const { data } = useQuery({ queryKey: ["authUser"] });
   const queryClient = useQueryClient();
+
+  const postOwner = post.user;
+  const isLiked = Array.isArray(post.likes) && post.likes.includes(data._id);
+  const isMyPost = data._id === post.user._id;
+  const formattedDate = formatPostDate(post.createdAt);
+
   const { mutate: deletePost, isPending: isDeleting } = useMutation({
     mutationFn: async () => {
       try {
@@ -93,12 +100,6 @@ const Post = ({ post }) => {
       toast.error(error.message);
     },
   });
-  const postOwner = post.user;
-  const isLiked = Array.isArray(post.likes) && post.likes.includes(data._id);
-
-  const isMyPost = data._id === post.user._id;
-
-  const formattedDate = "1h";
 
   const handleDeletePost = () => {
     deletePost();
@@ -192,10 +193,7 @@ const Post = ({ post }) => {
                         <div className="avatar">
                           <div className="w-8 rounded-full">
                             <img
-                              src={
-                                comment.user.profileImg ||
-                                "/avatar.png"
-                              }
+                              src={comment.user.profileImg || "/avatar.png"}
                             />
                           </div>
                         </div>
