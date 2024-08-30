@@ -9,15 +9,14 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { IoCalendarOutline } from "react-icons/io5";
 import { FaLink } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { formatMemberSinceDate } from "../../utils/timeFunctions";
 import useFollow from "../../hooks/useFollow";
-import { toast } from "react-toastify";
+import useUpdateProfile from "../../hooks/useUpdateProfile";
 
 const ProfilePage = () => {
   const { follow, isPending } = useFollow();
   const { data: authUser } = useQuery({ queryKey: ["authUser"] });
-  const queryClient = useQueryClient();
   const [coverImg, setCoverImg] = useState(null);
   const [profileImg, setProfileImg] = useState(null);
   const [feedType, setFeedType] = useState("posts");
@@ -47,39 +46,7 @@ const ProfilePage = () => {
     },
   });
 
-  const { mutate: updateProfile, isPending: isUpdateProfile } = useMutation({
-    mutationFn: async () => {
-      try {
-        const res = await fetch("/api/v1/users/update", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            profileImg,
-            coverImg,
-          }),
-        });
-        const data = await res.json();
-        if (!res.ok) {
-          throw new Error(data.error || "Something went wrong");
-        }
-        return data;
-      } catch (error) {
-        throw new Error(error.message);
-      }
-    },
-    onSuccess: () => {
-      toast.success("Profile updated successfully");
-      Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["authUser"] }),
-        queryClient.invalidateQueries({ queryKey: ["userProfile"] }),
-      ]);
-    },
-    onError: () => {
-      toast.error(error.message);
-    },
-  });
+  const { updateProfile, isUpdateProfile } = useUpdateProfile();
 
   const isMyProfile = authUser._id === user?._id;
   const alreadyFollowing = authUser?.following.includes(user?._id);
@@ -155,7 +122,7 @@ const ProfilePage = () => {
                 />
                 {/* USER AVATAR */}
                 <div className="avatar absolute -bottom-16 left-4">
-                  <div className="w-32 rounded-full relative group/avatar">
+                  <div className="w-32  object-cover rounded-full relative group/avatar">
                     <img
                       src={profileImg || user?.profileImg || "/avatar.png"}
                     />
@@ -185,7 +152,11 @@ const ProfilePage = () => {
                 {(coverImg || profileImg) && (
                   <button
                     className="btn btn-primary rounded-full btn-sm text-white px-4 ml-2"
-                    onClick={() => updateProfile()}
+                    onClick={async () => {
+                      await updateProfile({ coverImg, profileImg });
+                      setProfileImg(null);
+                      setCoverImg(null);
+                    }}
                   >
                     {isUpdateProfile ? "Updating..." : "Update"}
                   </button>
@@ -211,9 +182,9 @@ const ProfilePage = () => {
                             user.link.startsWith("http")
                               ? user.link
                               : `https://${user.link}`
-                          } 
+                          }
                           target="_blank"
-                          rel="noopener noreferrer" 
+                          rel="noopener noreferrer"
                           className="text-sm text-blue-500 hover:underline"
                         >
                           {user.link}
