@@ -9,16 +9,15 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { IoCalendarOutline } from "react-icons/io5";
 import { FaLink } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { formatMemberSinceDate } from "../../utils/timeFunctions";
+import useFollow from "../../hooks/useFollow";
+import { toast } from "react-toastify";
 
 const ProfilePage = () => {
-  const {
-    data: authUser,
-    error,
-    isPending,
-  } = useQuery({ queryKey: ["authUser"] });
-
+  const { follow, isPending } = useFollow();
+  const { data: authUser } = useQuery({ queryKey: ["authUser"] });
+  const queryClient = useQueryClient();
   const [coverImg, setCoverImg] = useState(null);
   const [profileImg, setProfileImg] = useState(null);
   const [feedType, setFeedType] = useState("posts");
@@ -26,7 +25,7 @@ const ProfilePage = () => {
   const coverImgRef = useRef(null);
   const profileImgRef = useRef(null);
   const { username } = useParams();
-  const isMyProfile = true;
+
   const {
     data: user,
     isLoading,
@@ -47,6 +46,43 @@ const ProfilePage = () => {
       }
     },
   });
+
+  const { mutate: updateProfile, isPending: isUpdateProfile } = useMutation({
+    mutationFn: async () => {
+      try {
+        const res = await fetch("/api/v1/users/update", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            profileImg,
+            coverImg,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.error || "Something went wrong");
+        }
+        return data;
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
+    onSuccess: () => {
+      toast.success("Profile updated successfully");
+      Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["authUser"] }),
+        queryClient.invalidateQueries({ queryKey: ["userProfile"] }),
+      ]);
+    },
+    onError: () => {
+      toast.error(error.message);
+    },
+  });
+
+  const isMyProfile = authUser._id === user?._id;
+  const alreadyFollowing = authUser?.following.includes(user?._id);
   const memberSince = formatMemberSinceDate(user?.createdAt);
 
   const handleImgChange = (e, state) => {
@@ -135,21 +171,23 @@ const ProfilePage = () => {
                 </div>
               </div>
               <div className="flex justify-end px-4 mt-5">
-                {isMyProfile && <EditProfileModal />}
+                {isMyProfile && <EditProfileModal authUser={authUser} />}
                 {!isMyProfile && (
                   <button
                     className="btn btn-outline rounded-full btn-sm"
-                    onClick={() => alert("Followed successfully")}
+                    onClick={() => follow(user?._id)}
                   >
-                    Follow
+                    {isPending && "Loading..."}
+                    {!isPending && alreadyFollowing && "Unfollow"}
+                    {!isPending && !alreadyFollowing && "Follow"}
                   </button>
                 )}
                 {(coverImg || profileImg) && (
                   <button
                     className="btn btn-primary rounded-full btn-sm text-white px-4 ml-2"
-                    onClick={() => alert("Profile updated successfully")}
+                    onClick={() => updateProfile()}
                   >
-                    Update
+                    {isUpdateProfile ? "Updating..." : "Update"}
                   </button>
                 )}
               </div>
@@ -169,12 +207,16 @@ const ProfilePage = () => {
                       <>
                         <FaLink className="w-3 h-3 text-slate-500" />
                         <a
-                          href="https://instagram.com"
+                          href={
+                            user.link.startsWith("http")
+                              ? user.link
+                              : `https://${user.link}`
+                          } 
                           target="_blank"
-                          rel="noreferrer"
+                          rel="noopener noreferrer" 
                           className="text-sm text-blue-500 hover:underline"
                         >
-                          instagram.com/johDoe
+                          {user.link}
                         </a>
                       </>
                     </div>
