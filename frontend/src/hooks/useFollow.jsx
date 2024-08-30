@@ -20,7 +20,7 @@ const useFollow = () => {
     },
     onSuccess: (data) => {
       Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["suggestedUser"] }),
+        queryClient.invalidateQueries({ queryKey: ["suggestedUsers"] }),
         queryClient.invalidateQueries({ queryKey: ["authUsers"] }),
       ]);
       toast.success(data?.message || "follow");
