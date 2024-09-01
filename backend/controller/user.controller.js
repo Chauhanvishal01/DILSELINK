@@ -154,3 +154,52 @@ export const updateUserProfile = async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error." });
   }
 };
+export const getFollowers = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const users = await User.findById(userId).populate(
+      "followers",
+      "username fullName profileImg bio"
+    );
+    if (!users) {
+      return res.status(404).json({ message: "Followers not found" });
+    }
+    const followers = users.followers.map((follower) => ({
+      username: follower.username,
+      email: follower.email,
+      profileImg: follower.profileImg,
+      fullName: follower.fullName,
+      bio: follower.bio,
+    }));
+
+    res.status(200).json(followers);
+  } catch (error) {
+    console.log("Error from My followers ", error.message);
+    return res.status(500).json({ error: "Internal Server Error." });
+  }
+};
+
+export const getFollowing = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const users = await User.findById(userId).populate(
+      "following",
+      "username fullName profileImg bio"
+    );
+    if (!users) {
+      return res.status(404).json({ message: "Followers not found" });
+    }
+    const followings = users.following.map((following) => ({
+      username: following.username,
+      email: following.email,
+      profileImg: following.profileImg,
+      fullName: following.fullName,
+      bio: following.bio,
+    }));
+
+    res.status(200).json(followings);
+  } catch (error) {
+    console.log("Error from My following ", error.message);
+    return res.status(500).json({ error: "Internal Server Error." });
+  }
+};
