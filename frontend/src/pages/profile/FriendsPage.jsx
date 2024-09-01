@@ -50,12 +50,14 @@ const FriendsPage = () => {
 
   return (
     <>
-      <div className="flex-[4_4_0] mr-auto border-r border-gray-700 min-h-screen">
+      <div className="flex-[4_4_0] mr-auto border-r border-gray-700 min-h-screen bg-gray-950">
         {/* Header */}
-        <div className="flex w-full border-b border-gray-700">
+        <div className="flex w-full border-b border-gray-700 bg-gray-900">
           <div
-            className={`flex justify-center flex-1 p-3 hover:bg-secondary transition duration-300 cursor-pointer relative ${
-              feedType === "followers" ? "bg-secondary" : ""
+            className={`flex justify-center flex-1 p-3 hover:bg-gray-800 transition duration-300 cursor-pointer relative ${
+              feedType === "followers"
+                ? "bg-gray-800 text-white"
+                : "text-gray-400"
             }`}
             onClick={() => setFeedType("followers")}
           >
@@ -65,8 +67,10 @@ const FriendsPage = () => {
             )}
           </div>
           <div
-            className={`flex justify-center flex-1 p-3 hover:bg-secondary transition duration-300 cursor-pointer relative ${
-              feedType === "following" ? "bg-secondary" : ""
+            className={`flex justify-center flex-1 p-3 hover:bg-gray-800 transition duration-300 cursor-pointer relative ${
+              feedType === "following"
+                ? "bg-gray-800 text-white"
+                : "text-gray-400"
             }`}
             onClick={() => setFeedType("following")}
           >
@@ -76,7 +80,8 @@ const FriendsPage = () => {
             )}
           </div>
         </div>
-        <div>
+
+        <div className="p-6">
           <div className="flex flex-col gap-4 space-y-4">
             {(isLoading || isRefetching) && (
               <>
@@ -94,32 +99,34 @@ const FriendsPage = () => {
           )}
 
           {!isLoading && !isRefetching && users && (
-            <div className="space-y-4 hover:cursor-pointer">
+            <div className="space-y-6">
               {users.map((user) => (
                 <Link
                   key={user._id}
                   to={`/profile/${user.username}`}
-                  className="bg-gray-900  w-full hover:bg-gray-800 shadow-lg rounded-lg p-4 transition duration-200"
+                  className="block"
                 >
-                  <div className="flex items-center gap-4">
-                    <div className="avatar">
-                      <div className="w-16 h-16 border-2 border-green-400 rounded-full overflow-hidden">
-                        <img
-                          src={user.profileImg || '/man1.jpg'}
-                          alt={`${user.name}'s profile`}
-                          className="object-cover w-full h-full"
-                        />
+                  <div className="bg-gray-800 hover:bg-gray-700 shadow-lg rounded-lg p-4 transition duration-300 transform hover:scale-105">
+                    <div className="flex items-center gap-4">
+                      <div className="avatar">
+                        <div className="w-16 h-16 border-2 border-primary rounded-full overflow-hidden shadow-lg">
+                          <img
+                            src={user.profileImg || "/man1.jpg"}
+                            alt={`${user.name}'s profile`}
+                            className="object-cover w-full h-full"
+                          />
+                        </div>
                       </div>
-                    </div>
-                    <div>
-                      <div className="text-white font-semibold text-lg">
-                        {user.fullName}
-                      </div>
-                      <div className="text-gray-400 text-sm">
-                        @{user.username}
-                      </div>
-                      <div className="text-gray-300 text-sm mt-1">
-                        {user.bio}
+                      <div>
+                        <div className="text-white font-bold text-lg">
+                          {user.fullName}
+                        </div>
+                        <div className="text-gray-400 text-sm">
+                          @{user.username}
+                        </div>
+                        <div className="text-gray-300 text-sm mt-1 italic">
+                          {user.bio}
+                        </div>
                       </div>
                     </div>
                   </div>
