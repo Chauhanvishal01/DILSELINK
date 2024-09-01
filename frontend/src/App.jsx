@@ -7,6 +7,8 @@ import Sidebar from "./components/SideBar";
 import RightPanel from "./components/RightPanel";
 import NotificationPage from "./pages/notification/NotificationPage";
 import ProfilePage from "./pages/profile/ProfilePage";
+import FriendsPage from './pages/profile/FriendsPage'
+import MessagePage from "./pages/messages/MessagePage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useQuery } from "@tanstack/react-query";
@@ -64,6 +66,14 @@ const App = () => {
           <Route
             path="/profile/:username"
             element={authUser ? <ProfilePage /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/friends/:username"
+            element={authUser ? <FriendsPage /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/messages"
+            element={authUser ? <MessagePage /> : <Navigate to="/login" />}
           />
         </Routes>
         {authUser && <RightPanel />}
