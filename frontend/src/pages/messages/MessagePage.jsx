@@ -1,9 +1,11 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import React, { useState, useRef, useEffect } from "react";
 
 const MessagePage = () => {
+  const { data: user } = useQuery({ queryKey: ["authUser"] });
   const [question, setQuestion] = useState("");
   const [messages, setMessages] = useState([]);
+
   const chatEndRef = useRef(null);
 
   const mutation = useMutation({
@@ -86,14 +88,25 @@ const MessagePage = () => {
             }`}
           >
             <div
-              className={`flex-shrink-0 h-10 w-10 rounded-full flex items-center justify-center font-bold ${
-                msg.type === "ai"
-                  ? "bg-green-600 text-white"
-                  : "bg-blue-600 text-white"
+              className={`flex-shrink-0 h-10 w-10 rounded-full flex items-center justify-center ${
+                msg.type === "ai" ? "bg-green-600" : "bg-blue-600"
               }`}
             >
-              {msg.type === "ai" ? "AI" : "U"}
+              {msg.type === "ai" ? (
+                <img
+                  src="/chat.png"
+                  alt="AI"
+                  className="object-cover w-full h-full rounded-full"
+                />
+              ) : (
+                <img
+                  src={user?.profileImg || "/avatar.png"}
+                  alt="User"
+                  className="object-cover w-full h-full rounded-full"
+                />
+              )}
             </div>
+
             <div className={`flex-grow ${msg.type === "ai" ? "ml-3" : "mr-3"}`}>
               <div
                 className={`p-3 rounded-lg max-w-full ${
