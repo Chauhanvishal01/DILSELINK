@@ -48,11 +48,12 @@ const MessagePage = () => {
     },
   });
 
-  const handleGenerateAnswer = () => {
+  const handleGenerateAnswer = (e) => {
+    e.preventDefault();
     setMessages((prevMessages) => [
       ...prevMessages,
       { text: question, type: "user" },
-      { text: "Loading...", type: "ai" },
+      { text: "Typing...", type: "ai" },
     ]);
     setQuestion("");
     mutation.mutate(question);
@@ -63,21 +64,20 @@ const MessagePage = () => {
   }, [messages]);
 
   return (
-    <div className="flex-[4_4_0] mr-auto border-r border-gray-700 min-h-screen bg-gray-950">
+    <div className="flex-[4_4_0] mr-auto border-r border-gray-700 min-h-screen bg-gray-950 flex flex-col">
       {/* Header */}
       <div className="flex justify-between items-center p-4 border-b border-gray-700 bg-gray-900">
         <p className="font-bold text-white">Chat</p>
       </div>
 
-      {/* No Messages */}
-      {messages.length === 0 && (
-        <div className="text-center p-4 font-bold text-gray-400">
-          Start the conversation...
-        </div>
-      )}
-
       {/* Messages List */}
       <div className="flex flex-col flex-grow p-4 overflow-auto space-y-4">
+        {messages.length === 0 && (
+          <div className="text-center p-4 font-bold text-gray-400">
+            Start the conversation...
+          </div>
+        )}
+
         {messages.map((msg, index) => (
           <div
             key={index}
@@ -125,19 +125,18 @@ const MessagePage = () => {
 
       {/* Message Input */}
       <div className="bg-gray-900 p-4 border-t border-gray-700">
-        <textarea
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-          rows={3}
-          className="w-full rounded-lg p-2 border border-gray-600 bg-gray-800 text-white"
-          placeholder="Type your message…"
-        />
-        <button
-          onClick={handleGenerateAnswer}
-          className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200"
-        >
-          Generate
-        </button>
+        <form onSubmit={handleGenerateAnswer}>
+          <textarea
+            value={question}
+            onChange={(e) => setQuestion(e.target.value)}
+            rows={3}
+            className="w-full rounded-lg p-2 border border-gray-600 bg-gray-800 text-white"
+            placeholder="Type your message…"
+          />
+          <button className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200">
+            Send
+          </button>
+        </form>
       </div>
     </div>
   );
