@@ -36,7 +36,6 @@ const FriendsPage = () => {
         if (!res.ok) {
           throw new Error(data.error || "Something went wrong");
         }
-        console.log(data);
         return data;
       } catch (error) {
         throw new Error(error);
@@ -100,9 +99,9 @@ const FriendsPage = () => {
 
           {!isLoading && !isRefetching && users && (
             <div className="space-y-6">
-              {users.map((user) => (
+              {users.map((user, index) => (
                 <Link
-                  key={user._id}
+                  key={index}
                   to={`/profile/${user.username}`}
                   className="block"
                 >

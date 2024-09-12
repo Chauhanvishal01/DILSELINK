@@ -67,14 +67,14 @@ const MessagePage = () => {
     <div className="flex-[4_4_0] mr-auto border-r border-gray-700 min-h-screen bg-gray-950 flex flex-col">
       {/* Header */}
       <div className="flex justify-between items-center p-4 border-b border-gray-700 bg-gray-900">
-        <p className="font-bold text-white">Chat</p>
+        <p className="font-bold text-white">Chat with AI</p>
       </div>
 
       {/* Messages List */}
       <div className="flex flex-col flex-grow p-4 overflow-auto space-y-4">
         {messages.length === 0 && (
-          <div className="text-center p-4 font-bold text-gray-400">
-            Start the conversation...
+          <div className="text-center p-4 mx-auto font-bold text-gray-400">
+            <img src="/robot.gif" alt="Start a conversation..." />
           </div>
         )}
 

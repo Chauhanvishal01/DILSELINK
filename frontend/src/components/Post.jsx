@@ -1,4 +1,4 @@
-import { FaRegComment } from "react-icons/fa";
+import { FaHeart, FaRegComment } from "react-icons/fa";
 import { BiRepost } from "react-icons/bi";
 import { FaRegHeart } from "react-icons/fa";
 import { FaRegBookmark } from "react-icons/fa6";
@@ -234,21 +234,15 @@ const Post = ({ post }) => {
                   <button className="outline-none">close</button>
                 </form>
               </dialog>
-              <div className="flex gap-1 items-center group cursor-pointer">
-                <BiRepost className="w-6 h-6  text-slate-500 group-hover:text-green-500" />
-                <span className="text-sm text-slate-500 group-hover:text-green-500">
-                  0
-                </span>
-              </div>
               <div
                 className="flex gap-1 items-center group cursor-pointer"
                 onClick={handleLikePost}
               >
                 {!isLiked && !isLiking && (
-                  <FaRegHeart className="w-4 h-4 cursor-pointer  group-hover:text-pink-500" />
+                  <FaHeart className="w-4 h-4 cursor-pointer  group-hover:text-pink-500" />
                 )}
                 {isLiked && !isLiking && (
-                  <FaRegHeart className="w-4 h-4 cursor-pointer text-pink-500 " />
+                  <FaHeart className="w-4 h-4 cursor-pointer text-pink-500 " />
                 )}
 
                 <span
@@ -256,12 +250,9 @@ const Post = ({ post }) => {
                     isLiked ? "text-pink-500" : "text-slate-500"
                   }`}
                 >
-                  {post.likes.length || 0}
+                  {post?.likes?.length || 0}
                 </span>
               </div>
-            </div>
-            <div className="flex w-1/3 justify-end gap-2 items-center">
-              <FaRegBookmark className="w-4 h-4 text-slate-500 cursor-pointer" />
             </div>
           </div>
         </div>
