@@ -7,6 +7,7 @@ import authRoutes from "./routes/auth.routes.js";
 import usersRoutes from "./routes/users.routes.js";
 import postRoutes from "./routes/post.routes.js";
 import notificationRoutes from "./routes/notifications.routes.js";
+import messageRoutes from "./routes/messages.routes.js";
 
 dotenv.config();
 const app = express();
@@ -27,6 +28,7 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/users", usersRoutes);
 app.use("/api/v1/posts", postRoutes);
 app.use("/api/v1/notifications", notificationRoutes);
+app.use("/api/v1/messages", messageRoutes);
 
 //Database Connection
 dbConnection();
