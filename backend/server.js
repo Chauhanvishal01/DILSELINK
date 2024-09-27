@@ -8,9 +8,8 @@ import usersRoutes from "./routes/users.routes.js";
 import postRoutes from "./routes/post.routes.js";
 import notificationRoutes from "./routes/notifications.routes.js";
 import messageRoutes from "./routes/messages.routes.js";
-
+import { app,server } from "./socket/socket.js";
 dotenv.config();
-const app = express();
 
 ///Cloudinary
 cloudinary.config({
@@ -33,6 +32,7 @@ app.use("/api/v1/messages", messageRoutes);
 //Database Connection
 dbConnection();
 
-app.listen(process.env.PORT, () => {
+server.listen(process.env.PORT, () => {
   console.log(`Server is listening on PORT ${process.env.PORT}`);
 });
+
