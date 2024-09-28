@@ -13,6 +13,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useQuery } from "@tanstack/react-query";
 import Spinner from "./components/subComponents/Spinner";
+import ChatPage from "./pages/Chats/ChatPage";
 const App = () => {
   const { data: authUser, isLoading } = useQuery({
     queryKey: ["authUser"],
@@ -74,6 +75,10 @@ const App = () => {
           <Route
             path="/messages"
             element={authUser ? <MessagePage /> : <Navigate to="/login" />}
+          />
+        <Route
+            path="/chats"
+            element={authUser ? <ChatPage /> : <Navigate to="/login" />}
           />
         </Routes>
         {authUser && <RightPanel />}
