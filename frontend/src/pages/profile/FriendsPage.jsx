@@ -110,7 +110,7 @@ const FriendsPage = () => {
                       <div className="avatar">
                         <div className="w-16 h-16 border-2 border-primary rounded-full overflow-hidden shadow-lg">
                           <img
-                            src={user.profileImg || "/man1.jpg"}
+                            src={user.profileImg || "/one.jpeg"}
                             alt={`${user.name}'s profile`}
                             className="object-cover w-full h-full"
                           />

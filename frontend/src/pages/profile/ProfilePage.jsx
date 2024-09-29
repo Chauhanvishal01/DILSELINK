@@ -122,7 +122,7 @@ const ProfilePage = () => {
                 <div className="avatar absolute -bottom-16 left-4">
                   <div className="w-32  object-cover rounded-full relative group/avatar">
                     <img
-                      src={profileImg || user?.profileImg || "/avatar.png"}
+                      src={profileImg || user?.profileImg || "/one.jpeg"}
                     />
                     <div className="absolute top-5 right-3 p-1 bg-primary rounded-full group-hover/avatar:opacity-100 opacity-0 cursor-pointer">
                       {isMyProfile && (

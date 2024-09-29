@@ -107,7 +107,7 @@ const NotificationPage = () => {
                   <div className="avatar">
                     <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-gray-700">
                       <img
-                        src={notification.from.profileImg || "/avatar.png"}
+                        src={notification.from.profileImg || "/one.jpeg"}
                         alt="Profile"
                         className="object-cover w-full h-full"
                       />

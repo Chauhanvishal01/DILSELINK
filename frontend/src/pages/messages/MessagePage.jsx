@@ -100,7 +100,7 @@ const MessagePage = () => {
                 />
               ) : (
                 <img
-                  src={user?.profileImg || "/avatar.png"}
+                  src={user?.profileImg || "/one.jpeg"}
                   alt="User"
                   className="object-cover w-full h-full rounded-full"
                 />
