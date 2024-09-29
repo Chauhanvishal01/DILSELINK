@@ -1,61 +1,63 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+import { useRecoilState, useRecoilValue } from "recoil";
 import { BsCheck2All, BsFillImageFill } from "react-icons/bs";
+import {
+  conversationsAtom,
+  selectedConversationAtom,
+} from "../../utils/messages.js";
+import { useQuery } from "@tanstack/react-query";
 
 const Conversation = ({ conversation, isOnline }) => {
-  const user = conversation.participants[0];
+  const user = conversation?.participants[0];
+  const { data: currentUser } = useQuery({ queryKey: ["authUser"] });
+
   const lastMessage = conversation.lastMessage;
-  const queryClient = useQueryClient();
+  const [selectedConversation, setSelectedConversation] = useRecoilState(
+    selectedConversationAtom
+  );
 
-  const { mutate: setSelectedConversation } = useMutation({
-    mutationFn: (selectedConversation) => {
-      queryClient.setQueryData("selectedConversation", selectedConversation);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries("selectedConversation");
-    },
-  });
 
+  
   return (
     <div
-      className="flex items-center p-2 gap-4 rounded-md hover:cursor-pointer hover:bg-gray-600 text-white"
-      onClick={() => {
-        const selected = {
+      className={`flex items-center gap-4 p-1 rounded-md cursor-pointer ${
+        selectedConversation?._id === conversation?._id ? "bg-gray-400" : ""
+      } hover:bg-gray-600 hover:text-white`}
+      onClick={() =>
+        setSelectedConversation({
           _id: conversation._id,
           userId: user._id,
-          userProfileImg: user.profileImg,
+          userProfilePic: user.profileImg,
           username: user.username,
-          mock: conversation.mock || [],
-        };
-        setSelectedConversation(selected);
-      }}
+          mock: conversation.mock,
+        })
+      }
     >
       <div className="relative">
         <img
-          src={user.profileImg || "/man1.jpg"}
-          alt="User"
-          className="w-12 h-12 rounded-full object-cover"
+          src={user?.profileImg || "/one.jpeg"}
+          alt={user?.username}
+          className="w-10 h-10 rounded-full"
         />
-        {isOnline ? (
-          <div className="h-2 w-2 rounded-full bg-green-600"></div>
-        ) : (
-          ""
+        {isOnline && (
+          <span className="absolute bg-green-500 w-3 h-3 rounded-full top-0 right-0 border border-white" />
         )}
       </div>
 
       <div className="flex flex-col text-sm">
-        <div className="flex items-center font-bold">
-          <span>{user.username}</span>
-        </div>
+        <span className="font-bold flex items-center">
+          {user?.username}{" "}
+          {/* <img src="/verified.png" alt="verified" className="w-4 h-4 ml-1" /> */}
+        </span>
         <span className="text-xs flex items-center gap-1">
-          {lastMessage.sender === user._id && (
-            <BsCheck2All
-              size={16}
-              className={lastMessage.seen ? "text-blue-400" : ""}
-            />
+          {currentUser?._id === lastMessage?.sender && (
+            <span className={lastMessage ? "text-blue-100" : ""}>
+              <BsCheck2All size={16} />
+            </span>
           )}
-          {lastMessage.text.length > 12
-            ? lastMessage.text.substring(0, 12) + "..."
-            : lastMessage.text || <BsFillImageFill size={16} />}
+          {lastMessage?.text?.length > 18
+            ? `${lastMessage.text.substring(0, 18)}...`
+            : lastMessage.text }
         </span>
       </div>
     </div>

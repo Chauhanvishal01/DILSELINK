@@ -1,9 +1,13 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useState, useEffect } from "react";
+import {
+  conversationsAtom,
+  selectedConversationAtom,
+} from "../../utils/messages.js";
 import notificationSound from "../../assets/sounds/notification.mp3";
+import { useRecoilValue } from "recoil";
 const Message = ({ ownMessage, message }) => {
-  const queryClient = useQueryClient();
-  const selectedConversation = queryClient.getQueryData("selectedConversation");
+  const selectedConversation = useRecoilValue(selectedConversationAtom);
   const { data: authUser } = useQuery({ queryKey: ["authUser"] });
 
   // State to manage the shake animation
@@ -33,7 +37,7 @@ const Message = ({ ownMessage, message }) => {
           </div>
           {/* User image */}
           <img
-            src={authUser?.profileImg}
+            src={authUser?.profileImg || "/one.jpeg"}
             alt="User"
             className="h-8 w-8 rounded-full border-2 border-blue-400 object-cover"
           />
@@ -42,8 +46,8 @@ const Message = ({ ownMessage, message }) => {
         <div className="flex items-start justify-start gap-2 mb-4">
           {/* Other user image */}
           <img
-            src={selectedConversation?.userProfileImg}
-            alt="User"
+            src={selectedConversation?.userProfilePic || "/one.jpeg"}
+            alt="U"
             className="h-8 w-8 rounded-full border-2 border-green-400 object-cover"
           />
           {/* Message text with shake animation */}
