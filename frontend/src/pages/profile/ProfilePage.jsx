@@ -3,7 +3,6 @@ import { Link, useParams } from "react-router-dom";
 import ProfileHeaderSkeleton from "../../components/subComponents/ProfileHeaderSkeleton";
 import Posts from "../../components/Posts";
 import EditProfileModal from "./EditProfileModal";
-import { POSTS } from "../../utils/dummy";
 
 import { FaArrowLeft } from "react-icons/fa6";
 import { IoCalendarOutline } from "react-icons/io5";
